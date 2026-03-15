@@ -1,0 +1,36 @@
+1.create a view for customer who have purchased products.
+
+mysql> create view pro_cust as select customer.cust_id,customer.name from customer join invoice_master on customer.cust_id=invoice_master.cust_id;
+Query OK, 0 rows affected (0.06 sec)
+
+mysql> select * from pro_cust;
++---------+------+
+| cust_id | name |
++---------+------+
+|       2 | Sana |
+|       3 | Manu |
+|       4 | ARYA |
+|       4 | ARYA |
+|       4 | ARYA |
+|       5 | NEHA |
++---------+------+
+6 rows in set (0.12 sec)
+
+2.create a view for invoice products (name,inv_id,p_id,quantity)
+
+mysql> create view invoice_prod as select customer.name, invoice_item.inv_id, invoice_item.p_id,invoice_item.quantity from customer join invoice_master on customer.cust_id=invoice_master.cust_id join invoice_item on invoice_master.inv_id=invoice_item.inv_id;
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> select * from invoice_prod;
++------+--------+------+----------+
+| name | inv_id | p_id | quantity |
++------+--------+------+----------+
+| NEHA |    101 |    1 |        7 |
+| ARYA |    109 |    5 |        5 |
+| ARYA |    109 |    2 |       10 |
+| ARYA |    108 |    1 |        8 |
+| NEHA |    101 |    1 |        7 |
++------+--------+------+----------+
+5 rows in set (0.06 sec)
+
+mysql>
