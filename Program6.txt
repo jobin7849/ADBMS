@@ -1,0 +1,89 @@
+mysql> select * from CUSTOMER;
++---------+--------+-----------+-----------+------------+
+| cust_id | name   | address   | city      | ph_no      |
++---------+--------+-----------+-----------+------------+
+|       2 | Sana   | KUNMKULAM | TVM       | 9543487465 |
+|       3 | Manu   | MUKKOM    | KOZHIKODE | 9672354563 |
+|       4 | ARYA   | MAYAMAL   | KOTTAYAM  | 9987453678 |
+|       5 | NEHA   | KALPETTA  | KOLLAM    | 9754556314 |
+|       6 | Aleena | KOCHI     | KOZHIKODE | 7584964231 |
++---------+--------+-----------+-----------+------------+
+5 rows in set (0.00 sec)
+
+mysql> select * from INVOICE_ITEM;
++--------+------+----------+
+| inv_id | p_id | quantity |
++--------+------+----------+
+|    101 |    1 |        7 |
+|    109 |    5 |        5 |
+|    109 |    2 |       10 |
+|    108 |    1 |        8 |
+|    101 |    1 |        7 |
++--------+------+----------+
+5 rows in set (0.00 sec)
+
+mysql> select * from INVOICE_MASTER;
++--------+---------+------------+
+| inv_id | cust_id | inv_date   |
++--------+---------+------------+
+|    101 |       5 | 2025-05-25 |
+|    102 |       4 | 2025-06-27 |
+|    103 |       2 | 2025-03-27 |
+|    105 |       3 | 2025-10-28 |
+|    108 |       4 | 2025-11-25 |
+|    109 |       4 | 2025-08-25 |
++--------+---------+------------+
+6 rows in set (0.04 sec)
+
+mysql> select * from PRODUCT;
++------+-------+-------+
+| p_id | pname | price |
++------+-------+-------+
+|    1 | soap  |    36 |
+|    2 | cup   |    15 |
+|    3 | chair |    51 |
+|    4 | pan   |    22 |
+|    5 | book  |    46 |
+|    6 | pen   |     7 |
+|    7 | table |   101 |
++------+-------+-------+
+7 rows in set (0.00 sec)
+
+1. List the product names, only include those purchased quantity more than 3.
+
+mysql> select pname from PRODUCT where p_id in(select p_id from INVOICE_ITEM where quantity>3);
++-------+
+| pname |
++-------+
+| soap  |
+| book  |
+| cup   |
++-------+
+3 rows in set (0.05 sec)
+
+2. Find the product that has no sale.
+
+mysql> select pname from PRODUCT where p_id not in(select p_id from INVOICE_ITEM);
++-------+
+| pname |
++-------+
+| chair |
+| pan   |
+| pen   |
+| table |
++-------+
+4 rows in set (0.04 sec)
+
+3. List the names of all customers who have purchased at least 2 products, making sure that
+no duplicate names are in the result.
+
+mysql> SELECT name FROM CUSTOMER WHERE cust_id IN (SELECT cust_id FROM INVOICE_MASTER WHERE inv_id IN (SELECT inv_id FROM INVOICE_ITEM GROUP BY inv_id HAVING COUNT(p_id)>=2));
++------+
+| name |
++------+
+| ARYA |
+| NEHA |
++------+
+2 rows in set (0.04 sec)
+
+mysql>
