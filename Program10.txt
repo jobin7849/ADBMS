@@ -1,0 +1,70 @@
+1. create a procedure to find greatest of 3 numbers 
+
+mysql> DELIMITER $$
+mysql>
+mysql> CREATE PROCEDURE greater(a INT, b INT, c INT)
+    -> BEGIN
+    ->     DECLARE x INT;
+    ->     DECLARE y INT;
+    ->     DECLARE z INT;
+    ->
+    ->     SET x = a;
+    ->     SET y = b;
+    ->     SET z = c;
+    ->
+    ->     IF x > y AND x > z THEN
+    ->         SELECT x AS 'greater';
+    ->     ELSEIF y > x AND y > z THEN
+    ->         SELECT y AS 'greater';
+    ->     ELSE
+    ->         SELECT z AS 'greater';
+    ->     END IF;
+    ->
+    -> END $$
+Query OK, 0 rows affected (0.14 sec)
+
+mysql>
+mysql> DELIMITER ;
+mysql> CALL greater(10,5,8);
++---------+
+| greater |
++---------+
+|      10 |
++---------+
+1 row in set (0.06 sec)
+Query OK, 0 rows affected (0.07 sec)
+
+2.Create a procedure to display invoice details of a particular customer.
+
+mysql> DELIMITER //
+mysql>
+mysql> CREATE PROCEDURE in_det(IN c_id INT)
+    -> BEGIN
+    ->     SELECT customer.cust_id,
+    ->            customer.name,
+    ->            invoice_master.inv_id,
+    ->            invoice_master.inv_date,
+    ->            invoice_item.p_id,
+    ->            invoice_item.quantity
+    ->     FROM customer
+    ->     JOIN invoice_master
+    ->         ON customer.cust_id = invoice_master.cust_id
+    ->     JOIN invoice_item
+    ->         ON invoice_master.inv_id = invoice_item.inv_id
+    ->     WHERE customer.cust_id = c_id;
+    -> END //
+Query OK, 0 rows affected (0.02 sec)
+
+mysql>
+mysql> DELIMITER ;
+mysql> call in_det(4);
++---------+------+--------+------------+------+----------+
+| cust_id | name | inv_id | inv_date   | p_id | quantity |
++---------+------+--------+------------+------+----------+
+|       4 | ARYA |    108 | 2025-11-25 |    1 |        8 |
+|       4 | ARYA |    109 | 2025-08-25 |    5 |        5 |
+|       4 | ARYA |    109 | 2025-08-25 |    2 |       10 |
++---------+------+--------+------------+------+----------+
+3 rows in set (0.05 sec)
+
+Query OK, 0 rows affected (0.06 sec)
