@@ -1,0 +1,50 @@
+
+1. Write a MongoDB query to create a user “CUSTOMER1” and grant the read role in the INVOICE database. 
+
+INVOICE> db.createUser({
+...   user: "CUSTOMER1",
+...   pwd: "yourPasswordHere",
+...   roles: [
+...     { role: "read", db: "INVOICE" }
+...   ]
+... })
+{ ok: 1 }
+
+invoice> db.getUser("CUSTOMER1")
+{
+  _id: 'invoice.CUSTOMER1',
+  userId: UUID('da635f47-1eb1-48fe-b86a-d755338f3a48'),
+  user: 'CUSTOMER1',
+  db: 'invoice',
+  roles: [ { role: 'read', db: 'invoice' } ],
+  mechanisms: [ 'SCRAM-SHA-1', 'SCRAM-SHA-256' ]
+}
+
+
+2. Write a MongoDB query to create the backup for the INVOICE database. 
+
+(base) ksb@ksb-H410M-H-V2:~$ mongodump --db invoice
+2026-03-23T12:07:03.688+0530	writing invoice.customer to dump/invoice/customer.bson
+2026-03-23T12:07:03.688+0530	writing invoice.product to dump/invoice/product.bson
+2026-03-23T12:07:03.690+0530	done dumping invoice.customer (6 documents)
+2026-03-23T12:07:03.691+0530	done dumping invoice.product (4 documents)
+
+
+3. Write a MongoDB query to restore a particular database or a collection. 
+
+test> use BOOKREVIEW
+switched to db BOOKREVIEW
+BOOKREVIEW> db.dropDatabase()
+{ ok: 1, dropped: 'BOOKREVIEW' }
+
+
+(base) ksb@ksb-H410M-H-V2:~$ mongorestore --db dumb/BOOKREVIEW
+2026-03-24T15:45:30.206+0530	Failed: invalid db name: illegal character '/' found in db name 'dumb/BOOKREVIEW'
+2026-03-24T15:45:30.206+0530	0 document(s) restored successfully. 0 document(s) failed to restore.
+
+
+4. Write a MongoDB query to create an index for the collection customer using the field customer_name.
+
+invoice> db.customer.createIndex({ customer_name: 1 })
+customer_name_1
+
